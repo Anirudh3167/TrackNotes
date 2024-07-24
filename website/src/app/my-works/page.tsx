@@ -1,55 +1,8 @@
 "use client";
 
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal"
-import { Button, Checkbox, Input, Link } from "@nextui-org/react";
-import { MailIcon } from "./MailIcon";
-import { LockIcon } from "./LockIcon";
+import LoginBox from "@/components/LoginBox";
 import { useEffect, useState } from "react";
 
-function LoginBox({ updateLoginStatus }: { updateLoginStatus: (status: boolean) => void }) {
-    const [isOpen, setIsOpen] = useState(true);
-    const [email,setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
-    const authenticateUser = () => {
-        if (email === 'anirudhmukkamala@gmail.com' && password === 'anirudh') {
-            if (rememberMe) localStorage.setItem('auth-status', 'authenticated');
-            updateLoginStatus(true);
-            setIsOpen(false);  // Not needed as parent component will automatically close
-        }
-    }
-  return (
-      <Modal isOpen={isOpen} placement="top-center">
-        <ModalContent>
-              <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
-              <ModalBody>
-                <Input   autoFocus   endContent={
-                    <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                  }
-                  label="Email"   placeholder="Enter your email"   variant="bordered"
-                  value={email}   onChange={(e)=>{setEmail(e.target.value)}} />
-                <Input   endContent={
-                    <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                  }
-                  label="Password"   placeholder="Enter your password"   type="password" 
-                  variant="bordered"   value={password}   onChange={(e)=>{setPassword(e.target.value)}}
-                />
-                <div className="flex py-2 px-1 justify-between">
-                  <Checkbox classNames={{label: "text-small",}}
-                    onChange={(e) => setRememberMe(e.target.checked)}>
-                      Remember me
-                  </Checkbox>
-                  <Link color="primary" href="#" size="sm"> Forgot password? </Link>
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="flat" onClick={()=>{}}> Close </Button>
-                <Button color="primary" onClick={authenticateUser}> Sign in </Button>
-              </ModalFooter>
-        </ModalContent>
-      </Modal>
-  );
-}
 
 function WorkData() {
     return(
