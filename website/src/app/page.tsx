@@ -11,6 +11,7 @@ export default function Home() {
       <span> {`Dashboard Section (With Stats of User usage, Notes,...)`} </span>
       <span> {`Profile (User's Data, Notes, Files, ...)`} </span>
       <Link href="/my-works" className="items-center justify-center flex w-full text-center text-4xl">My Works</Link>
+      <Link href="/md-editor" className="items-center justify-center flex w-full text-center text-4xl">Markdown Editor</Link>
     </main>
   );
 }
