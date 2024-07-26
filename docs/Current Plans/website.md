@@ -9,3 +9,7 @@
 - A Basic Authentication based on (Username (Unique), Password) + JWT authentication
 - Notes with preview option and markdown support
 - Cloud storage (by file System based working)
+
+# Don't forget
+- To define the `getUser` and `createUser`
+- Use skeletons for loading screen

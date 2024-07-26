@@ -1,42 +1,31 @@
+"use client";
 import { LockIcon } from "@/app/my-works/LockIcon";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/modal";
 import { Button, Checkbox, Input, Link } from "@nextui-org/react";
 import { MailIcon } from "lucide-react";
+import { signIn } from "next-auth/react";
 import { useRef } from "react";
+import { FaUser } from "react-icons/fa";
 
 
 export default function LoginBox({ updateLoginStatus }: { updateLoginStatus: (status: boolean) => void }) {
-    const emailRef = useRef<HTMLInputElement>(null);
-    const email = () => emailRef.current ? emailRef.current.value : '';
+    const usernameRef = useRef<HTMLInputElement>(null);
+    const username = () => usernameRef.current ? usernameRef.current.value : '';
     const passwordRef = useRef<HTMLInputElement>(null);
     const password = () => passwordRef.current ? passwordRef.current.value : '';
     const rememberMeRef = useRef<HTMLInputElement>(null);
     const rememberMe = () => rememberMeRef.current ? rememberMeRef.current.checked : false;
 
-    const authenticateUser = async () => {
-        fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email(), password: password() }),
-        }).then(res => res.json())
-        .then(data => {
-          if (data.status) {
-              if (rememberMe()) localStorage.setItem('auth-status', 'authenticated');
-              updateLoginStatus(true);
-          } else alert(data.reason);
-        });
-    }
-
   return (
-      <Modal isOpen={true} placement="top-center">
+      <Modal isOpen={true} placement="center">
         <ModalContent>
               <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
               <ModalBody>
                 <Input   autoFocus   endContent={
-                    <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                    <FaUser className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                   }
-                  label="Email"   placeholder="Enter your email"   variant="bordered"
-                  ref={emailRef} />
+                  label="Username"   placeholder="Enter your username"   variant="bordered"
+                  ref={usernameRef} />
                 <Input   endContent={
                     <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                   }
@@ -52,7 +41,7 @@ export default function LoginBox({ updateLoginStatus }: { updateLoginStatus: (st
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="flat" onClick={()=>{}}> Close </Button>
-                <Button color="primary" onClick={authenticateUser}> Sign in </Button>
+                <Button color="primary" onClick={()=>signIn("credentials",{username: username(), password: password(), callbackUrl: "/my-works", remember: rememberMe()})}> Sign in </Button>
               </ModalFooter>
         </ModalContent>
       </Modal>

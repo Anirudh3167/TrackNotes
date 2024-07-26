@@ -1,12 +1,11 @@
 "use client";
-
-import LoginBox from "@/components/LoginBox";
-import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 
-function WorkData() {
+function WorkData({user}:{user: any}) {
     return(
         <main className="bg-black flex flex-col text-left text-xl font-sans gap-10 p-10 w-full h-full">
+      <span className="text-4xl w-full text-green-800"> Welcome, {user?.name} </span>
       <span className="text-4xl w-full text-center"> TrackNotes </span>
         <span> Markdown Support Needed </span>
         <span> Basic initializations of the mobile app </span>
@@ -42,14 +41,9 @@ function WorkData() {
 
 
 export default function MyWork() {
-    const [userAuthenticated, setUserAuthenticated] = useState(false);
-    const checkPreviousAuth = async () => {
-        const authStatus = localStorage.getItem('auth-status');
-        if (authStatus && authStatus === 'authenticated') setUserAuthenticated(true);
-    }
-    useEffect(()=>{checkPreviousAuth();},[]);
-    const updateLoginStatus = (status: boolean) => {setUserAuthenticated(status);}
-    return(
-        userAuthenticated ? <WorkData /> : <LoginBox updateLoginStatus={updateLoginStatus} />
+    const { data: session, status } = useSession();
+    const loading = status === "loading";
+    return(loading ? "loading..." :
+        session && session.user ? <WorkData user={session.user} /> : <h1 className="text-3xl bg-black w-full h-full items-center justify-center">Please Login</h1>
     )
 }

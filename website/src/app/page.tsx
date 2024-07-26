@@ -1,9 +1,13 @@
+"use client";
 import { Link } from "@nextui-org/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function Home() {
+  const { data: session } = useSession();
   return (
     <main className="bg-black flex flex-col text-left text-xl font-sans gap-10 p-10 w-full h-full">
       <span className="text-4xl w-full text-center"> TrackNotes </span>
+      {session && <div className="text-2xl"> Welcome, {session.user?.name}</div>}
       <span> Markdown Support </span>
       <span> Allow to update Content Remotely </span>
       <span> Mobile App notes creation, Editing and Markdown based Display </span>
