@@ -8,7 +8,7 @@ import { useRef } from "react";
 import { FaUser } from "react-icons/fa";
 
 
-export default function LoginBox({ updateLoginStatus }: { updateLoginStatus: (status: boolean) => void }) {
+export default function LoginBox() {
     const usernameRef = useRef<HTMLInputElement>(null);
     const username = () => usernameRef.current ? usernameRef.current.value : '';
     const passwordRef = useRef<HTMLInputElement>(null);
