@@ -21,7 +21,7 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
     if (!id || id === '') return ;
     fetch(`/api/notes?noteId=${encodeURIComponent(id)}`, {method: 'GET'}).then(res => res.json())
     .then(data => {data.status ? setMarkdown(data.content) : alert(data.reason);})
-  },[]);
+  },[params.noteId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMarkdown(e.target.value);
