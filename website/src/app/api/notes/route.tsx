@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
-import path from 'path';
+import { join } from 'path';
 
-// Vercel allows only /tmp directory files to be editable.
+// Vercel allows only /tmp directory files to be editable. (This is a temporary solution)
 
 // Creates and updates notes
 export async function POST(req: Request) {
@@ -12,9 +12,10 @@ export async function POST(req: Request) {
     const { content, noteId } = await req.json();
     let id: string = (noteId && noteId !== '') ? noteId : Date.now().toString();  // Primary key
 
-    const folderPath = path.join(process.cwd(), 'tmp');
-    await fs.mkdir(folderPath, { recursive: true });
-    await fs.writeFile(path.join(folderPath, `${id}.md`), content, { encoding: 'utf8' });
+    // const folderPath = join(process.cwd(), 'tmp');
+    // const folderPath = join('/', 'tmp');
+    // await fs.mkdir(folderPath, { recursive: true });
+    await fs.writeFile(join('/','tmp', `${id}.md`), content, { encoding: 'utf8' });
     
     console.log("Id from POST: ", id);
     return Response.json({ status: true, noteId: id });
@@ -29,7 +30,7 @@ export async function GET(req: Request) {
     if (!id)
         return Response.json({ status: false, reason: 'No id provided' }, { status: 400 });
 
-    const folderPath = path.join(process.cwd(), 'tmp');
-    const file = await fs.readFile(path.join(folderPath, `${id}.md`), { encoding: 'utf8' });
+    // const folderPath = join(process.cwd(), 'tmp');
+    const file = await fs.readFile(join('/', 'tmp', `${id}.md`), { encoding: 'utf8' });
     return Response.json({ status: true, content: file });
 }
