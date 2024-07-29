@@ -43,7 +43,7 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ content: markdown, noteId: params.noteId }),
+      body: JSON.stringify({ content: markdown, noteId: params.noteId && params.noteId[0]}),
     }).then(res => res.json())
     .then(data => {
       if(data.status) {
