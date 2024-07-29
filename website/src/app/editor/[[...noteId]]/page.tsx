@@ -7,8 +7,13 @@ import { toast } from "sonner";
 import remarkGfm from 'remark-gfm';
 import { useRouter } from "next/navigation";
 
+export interface LocalNotesType {
+  noteId: string;
+  content: string; // Just get the first 25 characters
+}
+
 export default function MDEditor({ params }: { params: { noteId: string | undefined } }) {
-  const [markdown, setMarkdown] = useState('Write your markdown here');
+  const [markdown, setMarkdown] = useState('');
   const router = useRouter();
   useEffect(()=>{
     // id is being rendered as an object so id[0] is what we need
@@ -22,14 +27,14 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
     setMarkdown(e.target.value);
   };
 
-  const updateNoteIds = (id: string) => {
-    let r = localStorage.getItem('noteIds');
-    let ids: string[] = (r && r !== '[]' && r !== '') ? JSON.parse(r) : [];
-    console.log(ids);
-    // id is being rendered as an object so id[0] is what we need
-    if(ids.includes(id[0])) return;
-    ids.push(id);
-    localStorage.setItem('noteIds', JSON.stringify(ids));
+  const updateNoteIds = (noteId: string) => {
+    let r = localStorage.getItem('prevNotes');
+    let prevNotes: LocalNotesType[] = (r && r !== '[]' && r !== '') ? JSON.parse(r) : [];
+    console.log("Previous Notes: ",prevNotes);
+    // noteId is being rendered as an object so noteId[0] is what we need
+    if(prevNotes.find(note => note.noteId === noteId) !== undefined) return;
+    prevNotes.push({noteId: noteId, content: markdown.length > 25 ? markdown.slice(0, 25) + '...' : markdown});
+    localStorage.setItem('prevNotes', JSON.stringify(prevNotes));
   }
 
   const saveMarkdown = async () => {
@@ -43,6 +48,7 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
     .then(data => {
       if(data.status) {
         toast('Markdown saved', {icon: '👍'});
+        console.log("Id from saveMarkdown: ", data.noteId);
         updateNoteIds(data.noteId);
         router.push('/notes');
       } else alert(data.reason);
@@ -50,7 +56,7 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
   }
 
   return (
-    <div className="flex w-full flex-col p-10 max-sm:p-5 mt-14">
+    <div className="flex w-full flex-col p-10 max-sm:p-5">
       <Tabs aria-label="Options">
         <Tab key="Edit" title="Edit">
               <textarea onChange={handleChange} value={markdown} style={{minHeight:"calc(100vh - 100px)"}}

@@ -8,12 +8,13 @@ export async function POST(req: Request) {
                              { status: 405 });
     
     const { content, noteId } = await req.json();
-    let id = (noteId && noteId !== '') ? noteId : Date.now().toString();  // Primary key
+    let id: string = (noteId && noteId !== '') ? noteId : Date.now().toString();  // Primary key
 
     const folderPath = path.join(process.cwd(), 'uploads');
     await fs.mkdir(folderPath, { recursive: true });
     await fs.writeFile(path.join(folderPath, `${id}.md`), content, { encoding: 'utf8' });
-
+    
+    console.log("Id from POST: ", id);
     return Response.json({ status: true, noteId: id });
 }
 
