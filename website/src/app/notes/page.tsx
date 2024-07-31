@@ -6,9 +6,15 @@ import { LocalNotesType } from "../editor/[[...noteId]]/page";
 export default function Notes() {
     const [notes, setNotes] = useState<LocalNotesType[]>([]);
 
+    const loadNotes = async () => {
+        let r = await fetch('/api/getUserNotes', {method: 'GET'}).then(res => res.json());
+        console.log("UserNotes:\n",r);
+        setNotes(r.notes);
+    }
     useEffect(() => {
-        let r = localStorage.getItem('prevNotes');
-        if(r && r !== '[]') setNotes(JSON.parse(r));
+        // let r = localStorage.getItem('prevNotes');
+        // if(r && r !== '[]') setNotes(JSON.parse(r));
+        loadNotes();
     }, [])
     return(
         <div className="flex flex-col gap-3 p-3">

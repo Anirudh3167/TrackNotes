@@ -55,9 +55,9 @@ function NavbarUI ({session}: any) {
           </NavbarMenuItem>
         ))}
         {!(session && session.user) &&
-            <NavbarItem className="hidden lg:flex">
+            <NavbarMenuItem className="flex">
             <Link href="/login" color="foreground">Login</Link>
-            </NavbarItem>
+            </NavbarMenuItem>
         }
         <LoginLogoutButton session={session} />
         

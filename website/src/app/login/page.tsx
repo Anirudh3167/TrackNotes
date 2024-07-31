@@ -41,7 +41,7 @@ export default function LoginBox() {
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="flat" onClick={()=>{}}> Close </Button>
-                <Button color="primary" onClick={()=>signIn("credentials",{username: username(), password: password(), callbackUrl: "/my-works", remember: rememberMe()})}> Sign in </Button>
+                <Button color="primary" onClick={()=>signIn("credentials",{username: username(), email: "", password: password(), callbackUrl: "/my-works", remember: rememberMe()})}> Sign in </Button>
               </ModalFooter>
         </ModalContent>
       </Modal>

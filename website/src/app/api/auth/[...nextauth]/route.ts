@@ -1,4 +1,5 @@
 
+import { GetUser, RegisterUser } from "@/db/Users";
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 const handler = NextAuth({ // Default JWT tokens
@@ -12,13 +13,16 @@ const handler = NextAuth({ // Default JWT tokens
       name: 'Credentials',
       credentials: {
         username: { label: "Username", type: "text", placeholder: "Username" },
+        email: { label: "Email", type: "text", placeholder: "Email" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials, req) {
         console.log("Authorize Function (/api/auth/[...nextauth]/route.ts): ");
-        console.log(credentials,"\n\n");
-        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
-        return user ? user : null;
+        // console.log(credentials,"\n\n");
+        const { username, email, password } = credentials || {};
+        let exists = await GetUser({ username, email, password });
+        let user = exists && exists.length > 0 ? exists[0] : null;
+        return user ? {name:user.username,email:user.email,id:user._id} : null;
       }
     })
   ],
@@ -26,7 +30,10 @@ const handler = NextAuth({ // Default JWT tokens
     async signIn({user, account, profile, email, credentials}) {
         console.log("Sign In Function (/api/auth/[...nextauth]/route.ts): ");
         console.log(credentials);
-        return true;
+        // const { username, emailCredentail, password } = credentials || {};
+        // let exists = await GetUser({ username, email: emailCredentail, password });
+        // return exists && exists.length > 0 ? exists[0] : false;
+        return user !== null;
     },
   },
 })

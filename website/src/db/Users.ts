@@ -1,58 +1,42 @@
-// import { NextApiRequest, NextApiResponse } from 'next';
-import fs from 'fs';
-import path from 'path';
+import mongoose from "mongoose";
+import Users from "./Models/Users";
 
-export interface User {
-  id: number;
-  username: string;
-  password: string;
-  email: string;
+
+export async function GetUser({ username, email, password } : any) {
+  // Check based on unique username for now.
+  console.log("GetUser: ");
+  await mongoose.connect(process.env.NEXT_PUBLIC_MONGOOSE_URI || '');
+  let d = await Users.find({ username, password });
+  console.log(d);
+  return d;
 }
 
-const usersFilePath = path.join(process.cwd(), 'users.json');
+export async function RegisterUser({ username, email, password } : any) {
+  console.log("RegisterUser: ");
+  await mongoose.connect(process.env.NEXT_PUBLIC_MONGOOSE_URI || '');
+  
+  const d = await Users.create({ username, email, password, Notes: [] });
+  console.log(d);
+  return d;
+}
 
-// Helper function to read users from the JSON file
-export function readUsers (): User[] {
-    if (!fs.existsSync(usersFilePath)) {
-      fs.writeFileSync(usersFilePath, JSON.stringify([]));
-    }
-  const jsonData = fs.readFileSync(usersFilePath, 'utf-8');
-  return JSON.parse(jsonData);
-};
+export async function GetUserNotes({ username } : { username : string }) {
+  await mongoose.connect(process.env.NEXT_PUBLIC_MONGOOSE_URI || '');
+  let d = await Users.find({ username });
+  if (!d || d.length === 0) return [];
+  return d[0].Notes;
+}
 
-// Helper function to write users to the JSON file
-export function writeUsers(users: User[]) {
-  fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
-};
-
-// // API route handler
-// export default function handler(req: NextApiRequest, res: NextApiResponse) {
-//   if (req.method === 'GET') {
-//     // Retrieve users
-//     const users = readUsers();
-//     res.status(200).json(users);
-//   } else if (req.method === 'POST') {
-//     // Add a new user
-//     const { username, password, email } = req.body;
-
-//     if (!username || !password || !email) {
-//       return res.status(400).json({ message: 'All fields are required' });
-//     }
-
-//     const users = readUsers();
-//     const newUser: User = {
-//       id: users.length > 0 ? users[users.length - 1].id + 1 : 1, // Auto-increment ID
-//       username,
-//       password,
-//       email,
-//     };
-
-//     users.push(newUser);
-//     writeUsers(users);
-//     res.status(201).json(newUser);
-//   } else {
-//     // Handle any other HTTP method
-//     res.setHeader('Allow', ['GET', 'POST']);
-//     res.status(405).end(`Method ${req.method} Not Allowed`);
-//   }
-// }
+export async function UpdateUserNotes({ username, noteId, content } : { username: string, noteId : string, content : string }) {
+  await mongoose.connect(process.env.NEXT_PUBLIC_MONGOOSE_URI || '');
+  let d = null;
+  if ((await GetUserNotes({ username })).filter((note: any) => note.noteId === noteId).length === 0)
+    d = await Users.updateOne({ username }, { $push: { Notes: { noteId, access: 'private', content } } });
+  else
+    d = await Users.updateOne(
+      { username, "Notes.noteId": noteId },
+      { $set: { "Notes.$.content": content } }
+    );
+  console.log("User Notes Updated");
+  console.log(d);
+}

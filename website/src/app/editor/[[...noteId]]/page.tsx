@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 export interface LocalNotesType {
   noteId: string;
+  access: string;
   content: string; // Just get the first 25 characters
 }
 
@@ -20,22 +21,12 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
     let id = params.noteId;
     if (!id || id === '') return ;
     fetch(`/api/notes?noteId=${encodeURIComponent(id)}`, {method: 'GET'}).then(res => res.json())
-    .then(data => {data.status ? setMarkdown(data.content) : alert(data.reason);})
+    .then(data => { console.log("Use Effect: \n", data); data.status ? setMarkdown(data.Note.content) : alert(data.reason);})
   },[params.noteId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMarkdown(e.target.value);
   };
-
-  const updateNoteIds = (noteId: string) => {
-    let r = localStorage.getItem('prevNotes');
-    let prevNotes: LocalNotesType[] = (r && r !== '[]' && r !== '') ? JSON.parse(r) : [];
-    console.log("Previous Notes: ",prevNotes);
-    // noteId is being rendered as an object so noteId[0] is what we need
-    if(prevNotes.find(note => note.noteId === noteId) !== undefined) return;
-    prevNotes.push({noteId: noteId, content: markdown.length > 25 ? markdown.slice(0, 25) + '...' : markdown});
-    localStorage.setItem('prevNotes', JSON.stringify(prevNotes));
-  }
 
   const saveMarkdown = async () => {
     await fetch('/api/notes', {
@@ -49,7 +40,6 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
       if(data.status) {
         toast('Markdown saved', {icon: '👍'});
         console.log("Id from saveMarkdown: ", data.noteId);
-        updateNoteIds(data.noteId);
         router.push('/notes');
       } else alert(data.reason);
     })
