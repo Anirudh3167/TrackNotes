@@ -6,6 +6,7 @@ import { MdSave } from "react-icons/md";
 import { toast } from "sonner";
 import remarkGfm from 'remark-gfm';
 import { useRouter } from "next/navigation";
+import { Button } from "@nextui-org/react";
 
 export interface LocalNotesType {
   noteId: string;
@@ -45,8 +46,28 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
     })
   }
 
+  const deleteMarkdown = async () => {
+    await fetch('/api/notes/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ noteId: params.noteId && params.noteId[0]}),
+    }).then(res => res.json())
+    .then(data => {
+      if(data.status) {
+        toast('Markdown deleted', {icon: '👍'});
+        router.push('/notes');
+      } else alert(data.reason);
+    })
+  }
+
   return (
-    <div className="flex w-full flex-col p-10 max-sm:p-5">
+    <div className="flex w-full flex-col p-6 max-sm:px-3 max-sm:py-0">
+      <div className="w-full flex flex-row gap-10 pb-3 justify-start items-start">
+        <Button  color="danger" className="w-fit" onClick={deleteMarkdown} > Delete </Button>
+        <Button color="primary" className="w-fit" onClick={saveMarkdown} > <MdSave size={'24'} /> Save </Button>
+      </div>
       <Tabs aria-label="Options">
         <Tab key="Edit" title="Edit">
               <textarea onChange={handleChange} value={markdown} style={{minHeight:"calc(100vh - 100px)"}}
@@ -81,11 +102,11 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
           </ReactMarkdown>
         </Tab>
       </Tabs>
-      <div className="w-auto px-5 h-10 absolute top-10 max-sm:top-5 right-5 bg-default-100 rounded-xl text-white flex items-center justify-center cursor-pointer mt-14"
+      {/* <div className="w-auto px-5 h-10 absolute top-10 max-sm:top-5 right-5 bg-default-100 rounded-xl text-white flex items-center justify-center cursor-pointer mt-14"
       title="Save Markdown"
       onClick={()=>saveMarkdown()}> 
           <MdSave size={'24'} />
-      </div>
+      </div> */}
     </div>  
   );
 }
