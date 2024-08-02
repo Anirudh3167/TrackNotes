@@ -3,6 +3,8 @@ import Users from "./Models/Users";
 
 
 let mongoUrl = process.env.MONGODB_URL || '';
+console.log("MongoDB URL: ", mongoUrl);
+console.log("MongoDB URI: ", process.env.MONGODB_URI || '');
 
 export async function GetUser({ username, email, password } : any) {
   // Check based on unique username for now.
