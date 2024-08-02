@@ -2,11 +2,13 @@ import mongoose from "mongoose";
 import Users from "./Models/Users";
 
 
+let mongoUrl = process.env.MONGODB_URL || '';
+
 export async function GetUser({ username, email, password } : any) {
   // Check based on unique username for now.
   console.log("GetUser: ");
   try {
-    await mongoose.connect(process.env.MONGODB_URI || '');
+    await mongoose.connect(mongoUrl);
   } catch (error) {
     console.log("From GET USER: ",error);
   }
@@ -17,7 +19,7 @@ export async function GetUser({ username, email, password } : any) {
 
 export async function RegisterUser({ username, email, password } : any) {
   console.log("RegisterUser: ");
-  await mongoose.connect(process.env.MONGODB_URI || '');
+  await mongoose.connect(mongoUrl);
   
   const d = await Users.create({ username, email, password, Notes: [] });
   console.log(d);
@@ -25,14 +27,16 @@ export async function RegisterUser({ username, email, password } : any) {
 }
 
 export async function GetUserNotes({ username } : { username : string }) {
-  await mongoose.connect(process.env.MONGODB_URI || '');
+  console.log("GetUserNotes: ");
+  console.log("Connecting to DB with URL: ", mongoUrl);
+  await mongoose.connect(mongoUrl);
   let d = await Users.find({ username });
   if (!d || d.length === 0) return [];
   return d[0].Notes;
 }
 
 export async function UpdateUserNotes({ username, noteId, content } : { username: string, noteId : string, content : string }) {
-  await mongoose.connect(process.env.MONGODB_URI || '');
+  await mongoose.connect(mongoUrl);
   let d = null;
   if ((await GetUserNotes({ username })).filter((note: any) => note.noteId === noteId).length === 0)
     d = await Users.updateOne({ username }, { $push: { Notes: { noteId, access: 'private', content } } });
@@ -46,7 +50,7 @@ export async function UpdateUserNotes({ username, noteId, content } : { username
 }
 
 export async function DeleteUserNotes({ username, noteId } : { username: string, noteId : string }) {
-  await mongoose.connect(process.env.MONGODB_URI || '');
+  await mongoose.connect(mongoUrl);
   let d = await Users.updateOne({ username }, { $pull: { Notes: { noteId } } });
   console.log("User Notes Deleted");
   console.log(d);
