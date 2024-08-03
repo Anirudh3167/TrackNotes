@@ -1,32 +1,25 @@
+import { connectToDatabase } from "./HelperFunctions";
 import NotesModel from "./Models/Notes";
-import mongoose from "mongoose";
 
-
-let mongoUrl = process.env.MONGODB_URL || '';
 
 export async function GetNotes({ noteId } : {noteId : string}) {
-    await mongoose.connect(mongoUrl);
-    let d = await NotesModel.find({ noteId });
-    console.log(d);
-    return d;
+    await connectToDatabase();
+    return await NotesModel.find({ noteId });
 }
 
 export async function AddNote({ content, noteId, username } : {content : string, noteId : string, username : string}) {
-    await mongoose.connect(mongoUrl);
+    await connectToDatabase();
 
-    let exists = await GetNotes({ noteId });
-    if (exists && exists.length > 0) {
-        console.log("Updating Existing Notes");
+    // Decide whether to add or update
+    if ((await GetNotes({ noteId }))?.length > 0)
         await NotesModel.updateOne({ noteId }, { $set: { content } });
-    } else {
-        console.log("Updating New Notes");
+    else
         await NotesModel.create({ content, noteId, access: 'private', author : username });
-    }
+
     return {status:true};
 }
 
 export async function DeleteNote({ noteId } : {noteId : string}) {
-    await mongoose.connect(mongoUrl);
-    console.log("Deleting Notes");
+    await connectToDatabase();
     await NotesModel.deleteOne({ noteId });
 }

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { memo } from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem} from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -7,13 +7,12 @@ import { signOut } from "next-auth/react";
 export function LoginLogoutButton ({session}: any) {
   return (
   <NavbarItem>
-      <Button as={session?.user ? Button : Link} 
-        color={session?.user ? "danger" : "primary"} 
-        href={session?.user ? "" : "/signup"} variant="flat" 
-        onClick={(e) => { if (session?.user) { e.preventDefault(); signOut({ callbackUrl: "/" }); }}}
-      >
-        {session?.user ? "Logout" : "Sign Up"}
-      </Button>
+    {session?.user ? 
+        <Button as={Button} color="danger" variant="flat" onClick={() => signOut({ callbackUrl: "/" })}>
+          Logout</Button>
+      :
+        <Button as={Link} color="primary" href="/login" children='Login' />
+    }
   </NavbarItem>
   )
 }
@@ -26,7 +25,7 @@ function NavbarUI ({session}: any) {
 
     return (
     <Navbar shouldHideOnScroll>
-        <NavbarMenuToggle aria-label="menu" className="sm:hidden" />
+      <NavbarMenuToggle aria-label="menu" className="sm:hidden" />
       <NavbarBrand>
         <p className="font-bold text-2xl max-sm:text-xl text-transparent bg-clip-text bg-gradient-to-r to-teal-500 from-emerald-500">TrackNotes</p>
       </NavbarBrand>
@@ -47,7 +46,7 @@ function NavbarUI ({session}: any) {
       </NavbarContent>
       <NavbarMenu>
         {Object.entries(horizontalNavItems).map(([item, link], index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
+          <NavbarMenuItem isActive={pathname === link} key={index} aria-current={"page"}>
             <Link color={pathname === link ? "primary" : "foreground"}
             className="w-full" href={link} size="lg" >
                 {item}
@@ -66,4 +65,4 @@ function NavbarUI ({session}: any) {
     )
 }
 
-export default NavbarUI;
+export default memo(NavbarUI);

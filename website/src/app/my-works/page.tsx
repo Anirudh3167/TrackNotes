@@ -6,6 +6,12 @@ function WorkData({user}:{user: any}) {
     return(
         <main className="bg-black flex flex-col text-left text-xl font-sans gap-10 p-10 w-full h-full">
       <span className="text-4xl w-full text-green-800"> Welcome, {user?.name} </span>
+      <span> Markdown Support </span>
+      <span> Allow to update Content Remotely </span>
+      <span> Mobile App notes creation, Editing and Markdown based Display </span>
+      <span>{`User Authentication (OAuth, Email Verification, Dedicated pages,...)`}</span>
+      <span> {`Dashboard Section (With Stats of User usage, Notes,...)`} </span>
+      <span> {`Profile (User's Data, Notes, Files, ...)`} </span>
       <span className="text-4xl w-full text-center"> TrackNotes </span>
         <span> Markdown Support Needed </span>
         <span> Basic initializations of the mobile app </span>

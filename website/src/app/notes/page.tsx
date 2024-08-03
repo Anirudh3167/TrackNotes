@@ -1,34 +1,44 @@
 "use client";
-import { Link } from "@nextui-org/react";
+
+// React Functions
 import { useEffect, useState } from "react";
-import { LocalNotesType } from "../editor/[[...noteId]]/page";
 
-export default function Notes() {
+// UI Components
+import { Link } from "@nextui-org/react";
+import { LocalNotesType } from "@/lib/types";
+
+// custom made functions
+import { customFetch } from "@/lib/UtilityFunctions";
+import NotesItem from "@/components/ui/NotesItem";
+
+function Notes() {
     const [notes, setNotes] = useState<LocalNotesType[]>([]);
-
-    const loadNotes = async () => {
-        let r = await fetch('/api/getUserNotes', {method: 'GET'}).then(res => res.json());
-        console.log("UserNotes:\n",r);
-        setNotes(r.notes);
-    }
+    const [pageStatus, setPageStatus] = useState("loading");
     useEffect(() => {
-        // let r = localStorage.getItem('prevNotes');
-        // if(r && r !== '[]') setNotes(JSON.parse(r));
+        const loadNotes = async () => {
+            let r = await customFetch('/api/getUserNotes', 'GET').then(res => res.json());
+            // noteId is based on created timestamp
+            let sortedNotes = r.notes.sort((a: LocalNotesType, b: LocalNotesType) => 
+                                                parseInt(b.noteId) - parseInt(a.noteId));
+            setNotes(sortedNotes);
+            setPageStatus("loaded");
+        };
         loadNotes();
-    }, [])
+    }, []);
     return(
         <div className="flex flex-col gap-3 p-3">
             <Link href="/editor" className="flex items-center justify-center text-white text-2xl bg-default-200 rounded-lg w-48 h-auto p-3">New Note</Link>
             <h1 className="text-3xl flex items-center justify-center w-full">Your Notes</h1>
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3">
-                {notes.map((item, idx) => (
-                    <Link className="text-lg flex flex-col items-start justify-center text-white p-3 px-8 gap-4 bg-default-100 rounded-lg max-w-full"
-                href={`/editor/${item.noteId}`} key={idx}>
-                        <div className="text-xl">{item.content}</div>
-                    <div className="text-sm text-default-500"> Date: {(new Date(parseInt(item.noteId))).toString().slice(0,21)}</div>
-                    </Link>
-                ))}
-            </div>
+            {pageStatus === "loading" ? 
+                <p className="flex items-center justify-center w-full min-h-96 text-center text-3xl">Loading Your Notes...</p>
+            :
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4 max-sm:gap-3">
+                    {notes.map((item, idx) => <NotesItem item={item} idx={idx} />)}
+                </div>
+            }
+            {pageStatus === "loaded" && notes.length === 0 && <p className="flex items-center justify-center w-full h-screen text-center text-3xl">You don't have any notes</p>}
         </div>
     )
 }
+
+export default Notes;

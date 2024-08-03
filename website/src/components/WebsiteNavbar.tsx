@@ -1,10 +1,5 @@
 import { getServerSession } from "next-auth"
 import NavbarUI from "./NavbarUI";
 
-async function WebsiteNavbar() {
-    const session = await getServerSession();
-    console.log(session);
-    return (<NavbarUI session={session} />);
-}
-
+async function WebsiteNavbar() {return <NavbarUI session={await getServerSession()} />;}
 export default WebsiteNavbar;

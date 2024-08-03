@@ -1,5 +1,6 @@
 import React from "react";
 export const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <div className="text-2xl text-default-400 pointer-events-none flex-shrink-0">
   <svg
     aria-hidden="true"
     fill="none"
@@ -19,4 +20,5 @@ export const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
       fill="currentColor"
     />
   </svg>
+  </div>
 );

@@ -1,62 +1,60 @@
 // pages/signup.tsx
 "use client";
+// React Functions
+import Link from 'next/link';
+import { memo, useRef } from 'react';
+
+// Custom Functions
+import { customFetch } from '@/lib/UtilityFunctions';
 import { Button, Input } from '@nextui-org/react';
 import { signIn } from 'next-auth/react';
-import { useRef } from 'react';
+
+
+function SignupInputBox({label, refProp, InpType}: 
+  {label: string, refProp: React.RefObject<HTMLInputElement>, InpType: string}
+) {
+  return <Input  label={label}  type={InpType}  variant='underlined'  ref={refProp}   required
+    className="mb-4 bg-default-100 border-b" />
+}
 
 const Signup = () => {
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-  const confirmPasswordRef = useRef<HTMLInputElement>(null);
-  const handleUserRegistration = async () => {
-    const username = usernameRef.current?.value;
-    const email = emailRef.current?.value;
-    const password = passwordRef.current?.value;
-    const confirmPassword = confirmPasswordRef.current?.value;
-    console.log(username, password, confirmPassword);
+  const [usernameRef, emailRef, passwordRef, confirmPasswordRef] = 
+                  Array(4).fill('').map(() => useRef<HTMLInputElement>(null));
+
+  const handleSignup = async () => {
+    const [username, email, password, confirmPassword] =
+      [usernameRef, emailRef, passwordRef, confirmPasswordRef].map((ref) => ref.current?.value);
+
     if (!username || !password || !confirmPassword || !email)
       alert('Please fill in all fields');
     else if (password !== confirmPassword) alert('Passwords do not match');
-    else
-      await fetch('/api/auth/register', {
-        method: 'POST', headers: {'Content-Type': 'application/json',},
-        body: JSON.stringify({ username, email, password }),
-      }).then(r => r.json()).then(res => {
-        res.status ? signIn('credentials', {username, email, password,callbackUrl: '/'}) : alert(res.reason)
-      });
+    else {
+      let res = await customFetch('/api/auth/register', 'POST', { username, email, password })
+        .then(r => r.json())
+      console.log("Register: ", res);
+      res.status ? await signIn('credentials', {username, email, password, callbackUrl: '/notes'})
+        : alert(res.reason)
+    }
   }
   return (
     <div className="flex items-center justify-center min-h-screen bg-black">
       <div className="bg-default-100 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
         <form>
-          <Input label="Username" type='text' variant='underlined'
-            className="mb-4 bg-default-100 border-b" ref={usernameRef}   required    />
-            <Input label="Email" type='text' variant='underlined'
-              className="mb-4 bg-default-100 border-b" ref={emailRef}   required    />
-          <Input label="Password" type="password" variant='underlined'
-            className="mb-4 bg-default-100 border-b" ref={passwordRef} required    />
-          <Input label="Confirm Password" type="password" variant='underlined'
-            className="mb-4 bg-default-100 border-b" ref={confirmPasswordRef} required    />
-          <Button
-            type="submit"
-            className="w-full"
-            color="primary"
-            onClick={() => handleUserRegistration()}
-          >
-            Sign Up
-          </Button>
+          <SignupInputBox label="Username" refProp={usernameRef} InpType="text" />
+          <SignupInputBox label="Email" refProp={emailRef} InpType="email" />
+          <SignupInputBox label="Password" refProp={passwordRef} InpType="password" />
+          <SignupInputBox label="Confirm Password" refProp={confirmPasswordRef} InpType="password" />
+
+          <Button className="w-full bg-primary" children="Sign Up" onClick={() => handleSignup()} />
         </form>
         <p className="text-center mt-4">
           Already have an account?{' '}
-          <a href="/login" className="text-blue-600 hover:underline">
-            Log in
-          </a>
+          <Link href="/login" className="text-blue-600 hover:underline" children="Log in" />
         </p>
       </div>
     </div>
   );
 };
 
-export default Signup;
+export default memo(Signup);
