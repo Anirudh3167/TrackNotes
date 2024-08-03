@@ -11,7 +11,7 @@ export function LoginLogoutButton ({session}: any) {
         <Button as={Button} color="danger" variant="flat" onClick={() => signOut({ callbackUrl: "/" })}>
           Logout</Button>
       :
-        <Button as={Link} color="primary" href="/login" children='Login' />
+        <Button as={Link} color="primary" href="/login" children={['Login']} />
     }
   </NavbarItem>
   )

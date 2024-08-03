@@ -13,3 +13,16 @@
 # Don't forget
 - To define the `getUser` and `createUser`
 - Use skeletons for loading screen
+
+- Better to store the fetched data somewhere like context API to avoid these GET things for checking
+- Error Cases are not handled
+- Signup can further be organized by creating an Object type of the input fields
+like,
+```
+{
+    label : "Username",
+    type : "text",
+    ref : usernameRef
+}
+```
+ - UI components are still not organized (specially the NavbarUI)

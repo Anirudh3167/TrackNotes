@@ -46,11 +46,11 @@ const Signup = () => {
           <SignupInputBox label="Password" refProp={passwordRef} InpType="password" />
           <SignupInputBox label="Confirm Password" refProp={confirmPasswordRef} InpType="password" />
 
-          <Button className="w-full bg-primary" children="Sign Up" onClick={() => handleSignup()} />
+          <Button className="w-full bg-primary" children={["Sign up"]} onClick={() => handleSignup()} />
         </form>
         <p className="text-center mt-4">
           Already have an account?{' '}
-          <Link href="/login" className="text-blue-600 hover:underline" children="Log in" />
+          <Link href="/login" className="text-blue-600 hover:underline" children={["Log in"]} />
         </p>
       </div>
     </div>
