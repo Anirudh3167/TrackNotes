@@ -18,7 +18,7 @@ export function LoginLogoutButton ({session}: any) {
 }
 
 function NavbarUI ({session}: any) {
-    const horizontalNavItems:{[key: string]: string} = {"Home": "/", "Notes": "/notes", "GitHub link": "https://www.github.com/Anirudh3167"};
+    const horizontalNavItems:{[key: string]: string} = {"Home": "/", "Notes": "/notes", "profile": "/profile"};
     const pathname = usePathname();
     const noNavbarLinks = ["/signup", "/login"];
     if (noNavbarLinks.includes(pathname)) return(<></>);
