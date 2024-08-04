@@ -18,8 +18,12 @@ function SignupInputBox({label, refProp, InpType}:
 }
 
 const Signup = () => {
-  const [usernameRef, emailRef, passwordRef, confirmPasswordRef] = 
-                  Array(4).fill('').map(() => useRef<HTMLInputElement>(null));
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const confirmPasswordRef = useRef<HTMLInputElement>(null);
+  // const [usernameRef, emailRef, passwordRef, confirmPasswordRef] = 
+  //                 Array(4).fill('').map(() => useRef<HTMLInputElement>(null));
 
   const handleSignup = async () => {
     const [username, email, password, confirmPassword] =

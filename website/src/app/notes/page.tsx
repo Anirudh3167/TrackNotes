@@ -32,7 +32,7 @@ function Notes() {
                 <p className="flex items-center justify-center w-full min-h-96 text-center text-3xl">Loading Your Notes...</p>
             :
                 <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4 max-sm:gap-3">
-                    {notes.map((item, idx) => <NotesItem item={item} idx={idx} />)}
+                    {notes.map((item, idx) => <NotesItem item={item} key={idx} />)}
                 </div>
             }
             {pageStatus === "loaded" && notes.length === 0 && <p className="flex items-center justify-center w-full h-screen text-center text-3xl">You don't have any notes</p>}

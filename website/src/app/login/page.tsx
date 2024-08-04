@@ -21,7 +21,9 @@ export default function LoginBox() {
 
   const handleClose = () => {router.push('/');};
   const handleLogin = () => {
+    const handleRef = (ref: React.RefObject<HTMLInputElement>) => ref.current?.value;
     const [username, password, rememberMe] =
+      [usernameRef, passwordRef, rememberMeRef].map(handleRef);
       [usernameRef, passwordRef, rememberMeRef].map((ref) => ref.current?.value);
     signIn('credentials', {username, email:"", password, rememberMe, callbackUrl: '/notes'});
   };
