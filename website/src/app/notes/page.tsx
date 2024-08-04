@@ -35,7 +35,7 @@ function Notes() {
                     {notes.map((item, idx) => <NotesItem item={item} key={idx} />)}
                 </div>
             }
-            {pageStatus === "loaded" && notes.length === 0 && <p className="flex items-center justify-center w-full h-screen text-center text-3xl">You don't have any notes</p>}
+            {pageStatus === "loaded" && notes.length === 0 && <p className="flex items-center justify-center w-full h-screen text-center text-3xl">You don&#39;t have any notes</p>}
         </div>
     )
 }

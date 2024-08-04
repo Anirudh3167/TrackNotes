@@ -16,14 +16,15 @@ import { LockIcon } from "@/components/ui/icons/lockIcon";
 
 export default function LoginBox() {
     const router = useRouter();
-    const [usernameRef, passwordRef, rememberMeRef] = 
-        Array(3).fill('').map(() => useRef<HTMLInputElement>(null));
+    const usernameRef = useRef<HTMLInputElement>(null);
+    const passwordRef = useRef<HTMLInputElement>(null);
+    const rememberMeRef = useRef<HTMLInputElement>(null);
+    // const [usernameRef, passwordRef, rememberMeRef] = 
+    //     Array(3).fill('').map(() => useRef<HTMLInputElement>(null));
 
   const handleClose = () => {router.push('/');};
   const handleLogin = () => {
-    const handleRef = (ref: React.RefObject<HTMLInputElement>) => ref.current?.value;
     const [username, password, rememberMe] =
-      [usernameRef, passwordRef, rememberMeRef].map(handleRef);
       [usernameRef, passwordRef, rememberMeRef].map((ref) => ref.current?.value);
     signIn('credentials', {username, email:"", password, rememberMe, callbackUrl: '/notes'});
   };
