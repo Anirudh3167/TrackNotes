@@ -17,9 +17,8 @@ function Notes() {
     useEffect(() => {
         const loadNotes = async () => {
             let r = await customFetch('/api/getUserNotes', 'GET').then(res => res.json());
-            // noteId is based on created timestamp
             let sortedNotes = r.notes.sort((a: LocalNotesType, b: LocalNotesType) => 
-                                                parseInt(b.noteId) - parseInt(a.noteId));
+                                            parseInt(b.lastUpdated) - parseInt(a.lastUpdated));
             setNotes(sortedNotes);
             setPageStatus("loaded");
         };

@@ -18,7 +18,6 @@ const handler = NextAuth({ // Default JWT tokens
       },
       async authorize(credentials, req) {
         console.log("Authorize Function (/api/auth/[...nextauth]/route.ts): ");
-        // console.log(credentials,"\n\n");
         const { username, email, password } = credentials || {};
         let exists = await GetUser({ username, email, password });
         let user = exists?.length > 0 ? exists[0] : null;
@@ -29,11 +28,6 @@ const handler = NextAuth({ // Default JWT tokens
   callbacks: {
     async signIn({user, account, profile, email, credentials}) {
         console.log("Sign In Function (/api/auth/[...nextauth]/route.ts): ");
-        // console.log(credentials);
-        // console.log("User: ", user);
-        // const { username, emailCredentail, password } = credentials || {};
-        // let exists = await GetUser({ username, email: emailCredentail, password });
-        // return exists && exists.length > 0 ? exists[0] : false;
         return user !== null;
     },
   },

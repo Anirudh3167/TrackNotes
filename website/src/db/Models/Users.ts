@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const UsersSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
@@ -8,7 +8,10 @@ const userSchema = new mongoose.Schema({
     noteId: String,
     access: String,
     content: String, // only first 25 characters
+    lastUpdated: String,
   }>,
+  createdAt: String,
+  lastUpdated: String,
 });
 
-export default mongoose.models.Users || mongoose.model('Users', userSchema);
+export default mongoose.models.Users || mongoose.model('Users', UsersSchema);

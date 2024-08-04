@@ -36,13 +36,19 @@ export default function LoginBox() {
                 <Input  type="password" endContent={<LockIcon />} label="Password"   
                   placeholder="Enter your password" variant="bordered"   ref={passwordRef} />
                 <div className="flex py-2 px-1 justify-between">
-                  <Checkbox classNames={{label: "text-small"}} ref={rememberMeRef} children={["Remember me"]} />
+                  <Checkbox classNames={{label: "text-small"}} ref={rememberMeRef}>
+                    Remember Me
+                  </Checkbox>
                   <Link color="primary" href="#" size="sm"> Forgot password? </Link>
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="flat" onClick={handleClose} children={["Close"]}  />
-                <Button color="primary" onClick={handleLogin} children={["Sign in"]} />
+                <Button color="danger" variant="flat" onClick={handleClose}>
+                  Close
+                </Button>
+                <Button color="primary" onClick={handleLogin}>
+                  Sign in
+                </Button>
               </ModalFooter>
         </ModalContent>
       </Modal>

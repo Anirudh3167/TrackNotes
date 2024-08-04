@@ -48,7 +48,7 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
     <div className="flex w-full flex-col p-6 max-sm:px-3 max-sm:py-0">
       {/* Top Buttons */}
       <div className="w-full flex flex-row gap-10 pb-3 justify-start items-start">
-        <Button  color="danger" onClick={deleteMarkdown} children={['Delete']} />
+        <Button  color="danger" onClick={deleteMarkdown}> Delete </Button>
         <Button color="primary" onClick={saveMarkdown} > <MdSave size={'24'} /> Save </Button>
       </div>
       <Tabs aria-label="Options">
