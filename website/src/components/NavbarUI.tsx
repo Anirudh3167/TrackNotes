@@ -3,6 +3,7 @@ import React, { memo } from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem} from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { navbarOffLinks } from "@/lib/constants";
 
 export function LoginLogoutButton ({session}: any) {
   return (
@@ -20,8 +21,7 @@ export function LoginLogoutButton ({session}: any) {
 function NavbarUI ({session}: any) {
     const horizontalNavItems:{[key: string]: string} = {"Home": "/", "Notes": "/notes", "profile": "/profile"};
     const pathname = usePathname();
-    const noNavbarLinks = ["/signup", "/login"];
-    if (noNavbarLinks.includes(pathname)) return(<></>);
+    if (navbarOffLinks.includes(pathname)) return(<></>);
 
     return (
     <Navbar shouldHideOnScroll>

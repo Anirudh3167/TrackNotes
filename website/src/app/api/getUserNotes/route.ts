@@ -1,8 +1,8 @@
 import { GetUserNotes } from "@/db/Users";
-import { getServerSession } from "next-auth";
+import { getUserName } from "@/lib/severUtils";
 
 export async function GET(req: Request) {
-    const username = (await getServerSession())?.user?.name;
+    const username = await getUserName();
     return username ?
         Response.json({ status: true, notes: await GetUserNotes({ username }) })
     :

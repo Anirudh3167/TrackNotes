@@ -35,6 +35,13 @@ export async function UpdateUserNotes({ username, noteId, content } : { username
     );    
 }
 
+export async function UpdateUserNotesAccess({ username, noteId, access } : { username: string, noteId : string, access : string }) {
+  await connectToDatabase();
+  await Users.updateOne({ username, "Notes.noteId": noteId },
+    { $set: { "Notes.$.access": access } }
+  );
+}
+
 export async function DeleteUserNotes({ username, noteId } : { username: string, noteId : string }) {
   // Delete on both users and notes
   await connectToDatabase().then(() =>

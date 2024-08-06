@@ -83,3 +83,13 @@ if any such exists
 <br />
 
 <br />
+
+## The Client and Server problem
+background :
+```
+Used a server function (getServerSession) and a cline functio (customFetch) on same utils.ts
+
+The result is server overriding and some errors.
+
+Corrected by seperating the server requested components and client requested components
+```

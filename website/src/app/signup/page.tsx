@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { memo, useRef } from 'react';
 
 // Custom Functions
-import { customFetch } from '@/lib/UtilityFunctions';
+import { customFetch } from '@/lib/clientUtils';
 import { Button, Input } from '@nextui-org/react';
 import { signIn } from 'next-auth/react';
 

@@ -8,12 +8,16 @@ import { Link } from "@nextui-org/react";
 import { LocalNotesType } from "@/lib/types";
 
 // custom made functions
-import { customFetch } from "@/lib/UtilityFunctions";
+import { customFetch } from "@/lib/clientUtils";
 import NotesItem from "@/components/ui/NotesItem";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 function Notes() {
     const [notes, setNotes] = useState<LocalNotesType[]>([]);
     const [pageStatus, setPageStatus] = useState("loading");
+    const { data: session, status: sessionStatus } = useSession();
+    const router = useRouter();
     useEffect(() => {
         const loadNotes = async () => {
             let r = await customFetch('/api/getUserNotes', 'GET').then(res => res.json());
@@ -22,8 +26,11 @@ function Notes() {
             setNotes(sortedNotes);
             setPageStatus("loaded");
         };
-        loadNotes();
-    }, []);
+        
+        if (sessionStatus === "loading") return ;
+        else if (sessionStatus === "authenticated") loadNotes();
+        else router.push("/login");
+    }, [session, sessionStatus]);
     return(
         <div className="flex flex-col gap-3 p-3">
             <Link href="/editor" className="flex items-center justify-center text-white text-2xl bg-default-200 rounded-lg w-48 h-auto p-3">New Note</Link>

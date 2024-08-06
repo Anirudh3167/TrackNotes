@@ -1,19 +1,18 @@
 import { DeleteNote } from "@/db/Notes";
 import { DeleteUserNotes } from "@/db/Users";
-import { getServerSession } from "next-auth";
+import { getUserName } from "@/lib/severUtils";
 
 export async function POST(req: Request) {
-    const { noteId } = await req.json();
-    if (!noteId) return Response.json({ status: false, reason: 'No id provided' }, { status: 400 });
+    // Get the ID
+    const { noteId, author } = await req.json();
+    if (!noteId) return Response.json({ status: false, reason: 'No id provided' });
 
-    let userSession = await getServerSession();
-    await DeleteNote({ noteId }).then(() => {
-        let username = '';
-        if (!userSession || !userSession.user || !userSession.user.name) 
-            return Response.json({ status: false, reason: 'Unauthorized' }, { status: 401 });
-        else username = userSession.user.name;
+    // Authorize
+    let username = await getUserName();
+    if (!username || username !== author) return Response.json({ status: false, reason: 'Unauthorized' });
 
-        DeleteUserNotes({ username, noteId });
-    });
+    // Delete Notes
+    await DeleteNote({ noteId }).then(() => {DeleteUserNotes({ username, noteId })});
+
     return Response.json({ status: true });
 }

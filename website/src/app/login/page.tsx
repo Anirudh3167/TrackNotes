@@ -44,6 +44,9 @@ export default function LoginBox() {
                   </Checkbox>
                   <Link color="primary" href="#" size="sm"> Forgot password? </Link>
                 </div>
+                <div className="flex justify-start gap-2">
+                  New to TrackNotes? <Link color="primary" href="/signup"> Sign Up </Link>
+                </div>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="flat" onClick={handleClose}>
