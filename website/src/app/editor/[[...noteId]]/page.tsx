@@ -26,7 +26,7 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
   const router = useRouter();
   const { noteId } = params;
   const updateMarkdown = (e: React.ChangeEvent<HTMLTextAreaElement>) => setMarkdown(e.target.value);
-
+  
   useEffect(()=>{
     if (!noteId || noteId === '') return ;
     // Requesting the current Notes
@@ -70,14 +70,14 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
   }
 
   const copyLink = async () => {
-    navigator.clipboard.writeText("http://localhost:3000/notes/" + noteId);
+    navigator.clipboard.writeText(window.location.origin + "/notes/" + noteId);
     toast('Link Copied', {icon: '👍'});
   }
 
   return (
     <div className="flex w-full flex-col p-6 max-sm:px-3 max-sm:py-0">
       {/* Top Buttons */}
-      <div className="w-full flex flex-row gap-10 pb-3 justify-start items-start">
+      <div className="w-full flex flex-row gap-10 pb-3 justify-start items-start flex-wrap">
         <Button  color="danger" onClick={deleteMarkdown}> Delete </Button>
         <Button color="primary" onClick={saveMarkdown} > <MdSave size={'24'} /> Save </Button>
         {

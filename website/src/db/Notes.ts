@@ -17,7 +17,7 @@ export async function AddNote({ content, noteId, username } : {content : string,
     else
         await NotesModel.create({ content, noteId, access: 'private', author : username, lastUpdated : timestamp, createdAt : timestamp });
 
-    return {status:true};
+    return {status:true, timestamp };
 }
 
 export async function DeleteNote({ noteId } : {noteId : string}) {

@@ -13,8 +13,9 @@ export async function POST(req: Request) {
     let id: string = (noteId && noteId !== '') ? noteId : Date.now().toString();  // Primary key
 
     // First add the notes then to the user
-    await AddNote({ content, noteId: id, username }).then(()=>{
-        if (id !== noteId) UpdateUserNotes({ username, noteId: id, 
+    await AddNote({ content, noteId: id, username }).then((res)=>{
+        if (!res.status) return ;
+        UpdateUserNotes({ username, noteId: id, timestamp: res.timestamp, newNote: id !== noteId,
             content : content.length > 25 ? content.slice(0, 25) + "..." : content.slice(0, 25) });
     });
     

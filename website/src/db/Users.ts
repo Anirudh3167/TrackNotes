@@ -23,16 +23,15 @@ export async function UserNotesExists({ username, noteId } : { username: string,
             .filter((note: any) => note.noteId === noteId).length !== 0
 }
 
-export async function UpdateUserNotes({ username, noteId, content } : { username: string, noteId : string, content : string }) {
+export async function UpdateUserNotes({ username, noteId, content, timestamp, newNote } : { username: string, noteId : string, content : string, timestamp : number, newNote : boolean }) {
   await connectToDatabase();
+  console.log("New Note: ", newNote);
   // Decide whether to add or update
-  if (await UserNotesExists({ username, noteId })) 
-    await Users.updateOne({ username, "Notes.noteId": noteId },
-      { $set: { "Notes.$.content": content } }
+  if (newNote) await Users.updateOne({ username }, 
+    { $push: { Notes: { noteId, access: 'private', content, lastUpdated: timestamp } } });
+  else await Users.updateOne({ username, "Notes.noteId": noteId },
+      { $set: { "Notes.$.content": content, "Notes.$.lastUpdated": timestamp } }
     );
-  else await Users.updateOne({ username }, 
-      { $push: { Notes: { noteId, access: 'private', content } } }
-    );    
 }
 
 export async function UpdateUserNotesAccess({ username, noteId, access } : { username: string, noteId : string, access : string }) {
