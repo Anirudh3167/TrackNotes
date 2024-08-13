@@ -21,6 +21,7 @@ import { customFetch } from "@/lib/clientUtils";
 
 export default function MDEditor({ params }: { params: { noteId: string | undefined } }) {
   const [markdown, setMarkdown] = useState('');
+  const [prevContent, setPrevContent] = useState('');
   const [author, setAuthor] = useState('');
   const [access, setAccess] = useState('');
   const router = useRouter();
@@ -38,6 +39,7 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
           return ;
         }
         setMarkdown(data.Note.content);
+        setPrevContent(data.Note.content);
         setAuthor(data.Note.author);
         setAccess(data.Note.access);
       })
@@ -60,6 +62,10 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
   }
 
   const saveMarkdown = async () => {
+    if (prevContent === markdown) {
+      handleResponseAndNavigate({status:true,reason:"no change"},"has no changes detected");
+      return ;
+    }
     await customFetch('/api/notes', 'POST', { content: markdown, noteId }).then(res => res.json())
     .then(data => handleResponseAndNavigate(data,"saved"))
   }

@@ -38,7 +38,7 @@ function NavbarUI ({session}: any) {
       </NavbarContent>
       <NavbarContent justify="end">
         {!(session && session.user) &&
-            <NavbarItem className="hidden lg:flex">
+            <NavbarItem className="hidden sm:flex">
             <Link href="/login" color="foreground">Login</Link>
             </NavbarItem>
         }

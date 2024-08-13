@@ -13,6 +13,6 @@ export async function POST(req: Request) {
     if (!username || username !== author) return Response.json({ status: false, reason: 'Unauthorized' });
 
     // Update the access
-    await UpdateAccess({ noteId, access }).then(() => UpdateUserNotesAccess({ username, noteId, access }));
+    await UpdateAccess({ noteId, access }).then(() => {UpdateUserNotesAccess({ username, noteId, access })});
     return Response.json({ status: true });   
 }

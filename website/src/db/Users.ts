@@ -36,14 +36,14 @@ export async function UpdateUserNotes({ username, noteId, content, timestamp, ne
 
 export async function UpdateUserNotesAccess({ username, noteId, access } : { username: string, noteId : string, access : string }) {
   await connectToDatabase();
-  await Users.updateOne({ username, "Notes.noteId": noteId },
+  let r = await Users.updateOne({ username, "Notes.noteId": noteId },
     { $set: { "Notes.$.access": access } }
   );
+  console.log("From UpdateUserNotesAccess: ", r);
 }
 
 export async function DeleteUserNotes({ username, noteId } : { username: string, noteId : string }) {
   // Delete on both users and notes
-  await connectToDatabase().then(() =>
-    Users.updateOne({ username }, { $pull: { Notes: { noteId } } })
-  );
+  await connectToDatabase();
+  await Users.updateOne({ username }, { $pull: { Notes: { noteId } } })
 }
