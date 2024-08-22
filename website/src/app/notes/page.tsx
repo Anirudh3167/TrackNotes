@@ -33,7 +33,7 @@ function Notes() {
     }, [session, sessionStatus]);
     return(
         <div className="flex flex-col gap-3 p-3">
-            <Link href="/editor" className="flex items-center justify-center text-white text-2xl bg-default-200 rounded-lg w-48 h-auto p-3">New Note</Link>
+            <Link href="/editor/new" className="flex items-center justify-center text-white text-2xl bg-default-200 rounded-lg w-48 h-auto p-3">New Note</Link>
             <h1 className="text-3xl flex items-center justify-center w-full">Your Notes</h1>
             {pageStatus === "loading" ? 
                 <p className="flex items-center justify-center w-full min-h-96 text-center text-3xl">Loading Your Notes...</p>

@@ -19,7 +19,7 @@ import MarkdownRenderer from "@/components/ui/markdownRenderer";
 // Type Interfaces
 import { customFetch } from "@/lib/clientUtils";
 
-export default function MDEditor({ params }: { params: { noteId: string | undefined } }) {
+export default function MDEditor({ params }: { params: { noteId: string } }) {
   const [markdown, setMarkdown] = useState('');
   const [prevContent, setPrevContent] = useState('');
   const [author, setAuthor] = useState('');
@@ -29,7 +29,7 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
   const updateMarkdown = (e: React.ChangeEvent<HTMLTextAreaElement>) => setMarkdown(e.target.value);
   
   useEffect(()=>{
-    if (!noteId || noteId === '') return ;
+    if (noteId === 'new' || noteId === '') return ; // New Notes
     // Requesting the current Notes
     customFetch(`/api/notes?noteId=${encodeURIComponent(noteId)}`, 'GET').then(r=>r.json())
       .then(data => {
@@ -52,7 +52,7 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
 
   const UpdateAccess = async (newAccess: string) => {
     if (access === newAccess) return ;
-    console.log("New Access: ",newAccess);
+
     await customFetch('/api/notes/update-access', 'POST', {noteId,author,access:newAccess}).then(res => res.json())
     .then(data => {
       if (!data.status) {alert(data.reason); return ;} 
@@ -66,12 +66,13 @@ export default function MDEditor({ params }: { params: { noteId: string | undefi
       handleResponseAndNavigate({status:true,reason:"no change"},"has no changes detected");
       return ;
     }
-    await customFetch('/api/notes', 'POST', { content: markdown, noteId }).then(res => res.json())
+    await customFetch('/api/notes', 'POST', { content: markdown, noteId: noteId==='new' ? '' : noteId }).then(res => res.json())
     .then(data => handleResponseAndNavigate(data,"saved"))
   }
 
   const deleteMarkdown = async () => {
-    await customFetch('/api/notes/delete', 'POST', {noteId,author}).then(res => res.json())
+    if (noteId === 'new' || noteId === '') return router.push('/notes');
+    await customFetch('/api/notes/delete', 'POST', {noteId: noteId==='new' ? '' : noteId,author}).then(res => res.json())
     .then(data => handleResponseAndNavigate(data,"deleted"))
   }
 

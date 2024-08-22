@@ -53,7 +53,7 @@ This occurs only at the production time
 ## The Next UI problem 2
 Error Sample : <br />
 ```
-Using `nextui init -t app` inside already existing Next App
+Using "nextui init -t app" inside already existing Next App
 ```
 <br />
 Error : <br />
@@ -93,3 +93,7 @@ The result is server overriding and some errors.
 
 Corrected by seperating the server requested components and client requested components
 ```
+```
+
+## Decision Update
+Updating New Notes url from `\editor` to `\editor\new`

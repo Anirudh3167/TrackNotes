@@ -12,7 +12,10 @@ export async function POST(req: Request) {
     let username = await getUserName();
     if (!username || username !== author) return Response.json({ status: false, reason: 'Unauthorized' });
 
-    // Update the access
-    await UpdateAccess({ noteId, access }).then(() => {UpdateUserNotesAccess({ username, noteId, access })});
+    // Update the access in parallel
+    try {   await Promise.all([    UpdateAccess({ noteId, access }),
+                UpdateUserNotesAccess({ username, noteId, access })
+            ]);
+    } catch (err) {console.log(err); return Response.json({ status: false, reason: 'Internal Server Error' });}
     return Response.json({ status: true });   
 }

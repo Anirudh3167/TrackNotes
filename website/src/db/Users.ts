@@ -25,7 +25,7 @@ export async function UserNotesExists({ username, noteId } : { username: string,
 
 export async function UpdateUserNotes({ username, noteId, content, timestamp, newNote } : { username: string, noteId : string, content : string, timestamp : number, newNote : boolean }) {
   await connectToDatabase();
-  console.log("New Note: ", newNote);
+  
   // Decide whether to add or update
   if (newNote) await Users.updateOne({ username }, 
     { $push: { Notes: { noteId, access: 'private', content, lastUpdated: timestamp } } });
@@ -36,10 +36,9 @@ export async function UpdateUserNotes({ username, noteId, content, timestamp, ne
 
 export async function UpdateUserNotesAccess({ username, noteId, access } : { username: string, noteId : string, access : string }) {
   await connectToDatabase();
-  let r = await Users.updateOne({ username, "Notes.noteId": noteId },
-    { $set: { "Notes.$.access": access } }
-  );
-  console.log("From UpdateUserNotesAccess: ", r);
+  await Users.updateOne({ username, "Notes.noteId": noteId },
+                      { $set: { "Notes.$.access": access } }
+                    );
 }
 
 export async function DeleteUserNotes({ username, noteId } : { username: string, noteId : string }) {
