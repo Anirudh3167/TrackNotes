@@ -1,7 +1,6 @@
 "use client";
 import LinkAsButton from "@/components/ui/LinkAsButton";
 import ProfileCard from "@/components/ui/ProfileCard";
-import { Link } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
