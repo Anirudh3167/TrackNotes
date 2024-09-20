@@ -18,7 +18,7 @@ function Notes() {
     const router = useRouter();
     useEffect(() => {
         const loadNotes = async () => {
-            let r = await customFetch('/api/getUserNotes', 'GET').then(res => res.json());
+            let r = await customFetch('/api/getUserNotes', 'GET');
             if (!r.status) {console.log(r.reason); router.push("/login"); return ;}
             let sortedNotes = r.notes.sort((a: LocalNotesType, b: LocalNotesType) => 
                                             parseInt(b.lastUpdated) - parseInt(a.lastUpdated));

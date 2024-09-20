@@ -33,8 +33,7 @@ const Signup = () => {
       alert('Please fill in all fields');
     else if (password !== confirmPassword) alert('Passwords do not match');
     else {
-      let res = await customFetch('/api/auth/register', 'POST', { username, email, password })
-        .then(r => r.json())
+      let res = await customFetch('/api/auth/register', 'POST', { username, email, password });
       console.log("Register: ", res);
       res.status ? await signIn('credentials', {username, email, password, callbackUrl: '/notes'})
         : alert(res.reason)

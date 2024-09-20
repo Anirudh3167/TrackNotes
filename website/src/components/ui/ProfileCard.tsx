@@ -7,7 +7,7 @@ function ProfileCard ({user}: any) {
     const [userData, setUserData] = useState<LocalNotesType[]>([]);
     useEffect(() => {
         const loadUserData = async () => {
-            let res = await customFetch('/api/getUserNotes', 'GET').then(r => r.json());
+            let res = await customFetch('/api/getUserNotes', 'GET');
             setUserData(res.notes);
         }
         loadUserData();

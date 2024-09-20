@@ -31,7 +31,7 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
   useEffect(()=>{
     if (noteId === 'new' || noteId === '') return ; // New Notes
     // Requesting the current Notes
-    customFetch(`/api/notes?noteId=${encodeURIComponent(noteId)}`, 'GET').then(r=>r.json())
+    customFetch(`/api/notes?noteId=${encodeURIComponent(noteId)}`, 'GET')
       .then(data => {
         if (!data.status) {
           if (data.reason === 'Unauthorized') { router.push('/'); return ; }
@@ -53,7 +53,7 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
   const UpdateAccess = async (newAccess: string) => {
     if (access === newAccess) return ;
 
-    await customFetch('/api/notes/update-access', 'POST', {noteId,author,access:newAccess}).then(res => res.json())
+    await customFetch('/api/notes/update-access', 'POST', {noteId,author,access:newAccess})
     .then(data => {
       if (!data.status) {alert(data.reason); return ;} 
       toast(`Notes is ${newAccess} now`, {icon: '👍'});
@@ -66,13 +66,13 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
       handleResponseAndNavigate({status:true,reason:"no change"},"has no changes detected");
       return ;
     }
-    await customFetch('/api/notes', 'POST', { content: markdown, noteId: noteId==='new' ? '' : noteId }).then(res => res.json())
+    await customFetch('/api/notes', 'POST', { content: markdown, noteId: noteId==='new' ? '' : noteId })
     .then(data => handleResponseAndNavigate(data,"saved"))
   }
 
   const deleteMarkdown = async () => {
     if (noteId === 'new' || noteId === '') return router.push('/notes');
-    await customFetch('/api/notes/delete', 'POST', {noteId: noteId==='new' ? '' : noteId,author}).then(res => res.json())
+    await customFetch('/api/notes/delete', 'POST', {noteId: noteId==='new' ? '' : noteId,author})
     .then(data => handleResponseAndNavigate(data,"deleted"))
   }
 

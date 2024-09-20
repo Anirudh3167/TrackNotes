@@ -19,7 +19,7 @@ const [markdown, setMarkdown] = useState('');
   useEffect(()=>{
     if (!noteId || noteId === '') return ;
     // Requesting the current Notes
-    customFetch(`/api/notes?noteId=${encodeURIComponent(noteId)}`, 'GET').then(r=>r.json())
+    customFetch(`/api/notes?noteId=${encodeURIComponent(noteId)}`, 'GET')
       .then(data => {
         if (!data.status) {
           if (data.reason === 'Unauthorized') { router.push('/'); return ; }
