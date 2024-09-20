@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     // Update the access in parallel
     try {   await Promise.all([    UpdateAccess({ noteId, access }),
                 UpdateUserNotesAccess({ username, noteId, access })
-            ]);
+            ]).catch(err => {console.log(err); return Response.json({ status: false, reason: 'Internal Server Error' });});
     } catch (err) {console.log(err); return Response.json({ status: false, reason: 'Internal Server Error' });}
     return Response.json({ status: true });   
 }

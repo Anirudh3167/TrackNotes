@@ -4,18 +4,18 @@ import NotesModel from "./Models/Notes";
 
 export async function GetNotes({ noteId } : {noteId : string}) {
     await connectToDatabase();
-    return await NotesModel.find({ noteId });
+    return await NotesModel.findOne({ noteId });
 }
 
 export async function AddNote({ content, noteId, username } : {content : string, noteId : string, username : string}) {
     await connectToDatabase();
     let timestamp = Date.now();
 
-    // Decide whether to add or update
-    if ((await GetNotes({ noteId }))?.length > 0)
-        await NotesModel.updateOne({ noteId }, { $set: { content, lastUpdated : timestamp } });
-    else
-        await NotesModel.create({ content, noteId, access: 'private', author : username, lastUpdated : timestamp, createdAt : timestamp });
+    // Updates if noteId already exists Else creates
+    await NotesModel.updateOne({ noteId }, { 
+        $set: { content, lastUpdated : timestamp }, 
+        $setOnInsert: { noteId, createdAt : timestamp, access: 'private', author : username }, 
+        },{ upsert: true });
 
     return {status:true, timestamp };
 }

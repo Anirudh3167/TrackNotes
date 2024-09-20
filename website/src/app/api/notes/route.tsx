@@ -1,3 +1,4 @@
+import { limitStringLength } from '@/db/HelperFunctions';
 import { AddNote, GetNotes } from '@/db/Notes';
 import { UpdateUserNotes } from '@/db/Users';
 import { getUserName } from '@/lib/severUtils';
@@ -14,9 +15,8 @@ export async function POST(req: Request) {
 
     // First add the notes then to the user
     await AddNote({ content, noteId: id, username }).then((res)=>{
-        if (!res.status) return ;
-        UpdateUserNotes({ username, noteId: id, timestamp: res.timestamp, newNote: id !== noteId,
-            content : content.length > 25 ? content.slice(0, 25) + "..." : content.slice(0, 25) });
+        res.status && UpdateUserNotes({ username, noteId: id, timestamp: res.timestamp, 
+            newNote: id !== noteId, content : limitStringLength(content, 25) });
     });
     
     return Response.json({ status: true, noteId: id });
@@ -28,7 +28,7 @@ export async function GET(req: Request) {
     if (!id) return Response.json({ status: false, reason: 'No id provided' });
     
     // Get the notes
-    const Note = await GetNotes({ noteId: id }).then(res => res ? res[0] : null);
+    const Note = await GetNotes({ noteId: id });
     if (!Note) return Response.json({ status: false, reason: 'Note not found' });
 
     // Authorize  

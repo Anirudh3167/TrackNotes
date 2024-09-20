@@ -3,7 +3,7 @@ import { connectToDatabase } from "./HelperFunctions";
 
 export async function GetUser({ username, password } : any) {
   await connectToDatabase();
-  return await Users.find({ username, password });
+  return await Users.findOne({ username, password });
 }
 
 export async function RegisterUser({ username, email, password } : any) {
@@ -13,14 +13,7 @@ export async function RegisterUser({ username, email, password } : any) {
 
 export async function GetUserNotes({ username } : { username : string }) {
   await connectToDatabase();
-  let d = await Users.find({ username });
-  return (!d || d.length === 0) ? [] : d[0].Notes;
-}
-
-export async function UserNotesExists({ username, noteId } : { username: string, noteId : string }) {
-  await connectToDatabase();
-  return (await GetUserNotes({ username }))
-            .filter((note: any) => note.noteId === noteId).length !== 0
+  return (await Users.findOne({ username }, { Notes: 1, _id: 0 }))?.Notes || [];
 }
 
 export async function UpdateUserNotes({ username, noteId, content, timestamp, newNote } : { username: string, noteId : string, content : string, timestamp : number, newNote : boolean }) {
