@@ -18,6 +18,7 @@ import MarkdownRenderer from "@/components/ui/markdownRenderer";
 
 // Type Interfaces
 import { customFetch } from "@/lib/clientUtils";
+import EditorToolbar from "@/components/ui/EditorToolbar";
 
 export default function MDEditor({ params }: { params: { noteId: string } }) {
   const [markdown, setMarkdown] = useState('');
@@ -28,6 +29,28 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
   const { noteId } = params;
   const updateMarkdown = (e: React.ChangeEvent<HTMLTextAreaElement>) => setMarkdown(e.target.value);
   
+  const handleFormatting = (start: string, end: string) => {
+    const textarea = document.getElementById('markdown-textarea') as HTMLTextAreaElement;
+    const selectionStart = textarea.selectionStart;
+    const selectionEnd = textarea.selectionEnd;
+    const currentValue = markdown;
+
+    // Create new markdown value with formatting
+    const newValue =
+      currentValue.slice(0, selectionStart) +
+      start +
+      currentValue.slice(selectionStart, selectionEnd) +
+      end +
+      currentValue.slice(selectionEnd);
+
+    setMarkdown(newValue);
+    
+    // Adjust cursor position
+    textarea.focus();
+    textarea.selectionStart = selectionStart + start.length;
+    textarea.selectionEnd = selectionEnd + start.length;
+  };
+
   useEffect(()=>{
     if (noteId === 'new' || noteId === '') return ; // New Notes
     // Requesting the current Notes
@@ -110,8 +133,12 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
       </div>
       <Tabs aria-label="Options">
         <Tab key="Edit" title="Edit">
-            <textarea onChange={updateMarkdown} value={markdown} style={{minHeight:"calc(100vh - 100px)"}}
-              className="w-full h-full resize-none bg-default-100 rounded-xl p-5 outline-none" />
+            <div className="w-full h-full">
+              {/* Editor toolbar */}
+              <EditorToolbar onFormatting={handleFormatting} />
+              <textarea id='markdown-textarea' onChange={updateMarkdown} value={markdown} style={{minHeight:"calc(100vh - 100px)"}}
+                className="w-full h-full resize-none bg-default-100 rounded-tr-none rounded-tl-none rounded-xl p-5 outline-none" />
+            </div>
         </Tab>
         <Tab key="Preview" title="Preview">
             <MarkdownRenderer markdown={markdown} />
