@@ -47,9 +47,9 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ onFormatting }) => {
         <DropdownTrigger>
             <Button> Headings </Button>
         </DropdownTrigger>
-        <DropdownMenu aria-label="Static Actions">
+        <DropdownMenu aria-label="Static Actions" autoFocus={false}>
             {[1, 2, 3, 4, 5, 6].map((level) => (
-            <DropdownItem key={level} onClick={() => handleHeading(level)}>
+            <DropdownItem key={level} autoFocus={false} onClick={() => handleHeading(level)} textValue={`Heading ${level}`}>
                 Heading {level}
             </DropdownItem>
             ))}
@@ -68,4 +68,4 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ onFormatting }) => {
   );
 };
 
-export default EditorToolbar;
+export default React.memo(EditorToolbar);

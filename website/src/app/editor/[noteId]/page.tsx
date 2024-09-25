@@ -1,7 +1,7 @@
 "use client";
 
 // React Functions
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 // UI Components
@@ -22,6 +22,7 @@ import EditorToolbar from "@/components/ui/EditorToolbar";
 
 export default function MDEditor({ params }: { params: { noteId: string } }) {
   const [markdown, setMarkdown] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [prevContent, setPrevContent] = useState('');
   const [author, setAuthor] = useState('');
   const [access, setAccess] = useState('');
@@ -29,27 +30,32 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
   const { noteId } = params;
   const updateMarkdown = (e: React.ChangeEvent<HTMLTextAreaElement>) => setMarkdown(e.target.value);
   
-  const handleFormatting = (start: string, end: string) => {
-    const textarea = document.getElementById('markdown-textarea') as HTMLTextAreaElement;
-    const selectionStart = textarea.selectionStart;
-    const selectionEnd = textarea.selectionEnd;
-    const currentValue = markdown;
+  const handleFormatting = useCallback( (start: string, end: string) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return ;
+      const selectionStart = textarea.selectionStart;
+      const selectionEnd = textarea.selectionEnd;
+      const currentValue = textarea.value;
 
-    // Create new markdown value with formatting
-    const newValue =
-      currentValue.slice(0, selectionStart) +
-      start +
-      currentValue.slice(selectionStart, selectionEnd) +
-      end +
-      currentValue.slice(selectionEnd);
+      // Create new markdown value with formatting
+      const newValue =
+        currentValue.slice(0, selectionStart) +
+        start +
+        currentValue.slice(selectionStart, selectionEnd) +
+        end +
+        currentValue.slice(selectionEnd);
 
-    setMarkdown(newValue);
-    
-    // Adjust cursor position
-    textarea.focus();
-    textarea.selectionStart = selectionStart + start.length;
-    textarea.selectionEnd = selectionEnd + start.length;
-  };
+      // Update state with new markdown value
+      setMarkdown(newValue);
+
+      // Use setTimeout to ensure focus and cursor positioning happens after state update
+      setTimeout(() => {
+        textarea.focus(); // Focus on the textarea
+        const newCursorPosition = selectionStart + start.length; // Cursor after the opening formatting tag
+        textarea.selectionStart = newCursorPosition;
+        textarea.selectionEnd = newCursorPosition; // Set both to the same position
+      }, 0);
+  },[]);
 
   useEffect(()=>{
     if (noteId === 'new' || noteId === '') return ; // New Notes
@@ -137,6 +143,7 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
               {/* Editor toolbar */}
               <EditorToolbar onFormatting={handleFormatting} />
               <textarea id='markdown-textarea' onChange={updateMarkdown} value={markdown} style={{minHeight:"calc(100vh - 100px)"}}
+                ref={textareaRef}
                 className="w-full h-full resize-none bg-default-100 rounded-tr-none rounded-tl-none rounded-xl p-5 outline-none" />
             </div>
         </Tab>

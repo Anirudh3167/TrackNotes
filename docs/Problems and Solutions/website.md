@@ -97,3 +97,9 @@ Corrected by seperating the server requested components and client requested com
 
 ## Decision Update
 Updating New Notes url from `\editor` to `\editor\new`
+
+## The Editor Buttons Problem
+The editor is having cursor position autoset to the end.
+
+Corrected by using the setTimeout after `textarea.focus()`
+This is because `setMarkdown()` is re rendering due to which the component gets built again
