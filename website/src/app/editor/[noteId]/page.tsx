@@ -19,6 +19,7 @@ import MarkdownRenderer from "@/components/ui/markdownRenderer";
 // Type Interfaces
 import { customFetch } from "@/lib/clientUtils";
 import EditorToolbar from "@/components/ui/EditorToolbar";
+import EditorDropdownMenu from "./EditorOptions";
 
 export default function MDEditor({ params }: { params: { noteId: string } }) {
   const [markdown, setMarkdown] = useState('');
@@ -26,6 +27,8 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
   const [prevContent, setPrevContent] = useState('');
   const [author, setAuthor] = useState('');
   const [access, setAccess] = useState('');
+  const [editing, setEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { noteId } = params;
   const updateMarkdown = (e: React.ChangeEvent<HTMLTextAreaElement>) => setMarkdown(e.target.value);
@@ -71,6 +74,7 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
         setPrevContent(data.Note.content);
         setAuthor(data.Note.author);
         setAccess(data.Note.access);
+        setIsLoading(false);
       })
   },[noteId]);
 
@@ -80,7 +84,7 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
   }
 
   const UpdateAccess = async (newAccess: string) => {
-    if (access === newAccess) return ;
+    if (access === newAccess || newAccess === '') return ;
 
     await customFetch('/api/notes/update-access', 'POST', {noteId,author,access:newAccess})
     .then(data => {
@@ -110,11 +114,12 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
     toast('Link Copied', {icon: '👍'});
   }
 
+  if (isLoading) return (<h1 className="text-3xl font-bold text-white">Loading...</h1>);
   return (
     <div className="flex w-full flex-col p-6 max-sm:px-3 max-sm:py-0">
       {/* Top Buttons */}
       <div className="w-full flex flex-row gap-10 pb-3 justify-start items-start flex-wrap">
-        <Button  color="danger" onClick={deleteMarkdown}> Delete </Button>
+        {/* <Button  color="danger" onClick={deleteMarkdown}> Delete </Button>
         <Button color="primary" onClick={saveMarkdown} > <MdSave size={'24'} /> Save </Button>
         {
           noteId &&
@@ -135,22 +140,28 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
               <SelectItem key={'private'} value='private'>Private</SelectItem>
               <SelectItem key={'public'} value='public'>Public</SelectItem>
             </Select>
-        }
+        } */}
+        <EditorDropdownMenu onEdit={() => {setEditing(true)}}
+        currentAccess = {access}
+        onPreview={() => {setEditing(false)}}
+        onCopy={() => {copyLink()}}
+        onDelete={()=>{deleteMarkdown()}}
+        onSave={()=>{saveMarkdown()}}
+        onAccessChange={(access:string) => {UpdateAccess(access)}}
+         />
       </div>
-      <Tabs aria-label="Options">
-        <Tab key="Edit" title="Edit">
+      {editing ?
             <div className="w-full h-full">
               {/* Editor toolbar */}
               <EditorToolbar onFormatting={handleFormatting} />
-              <textarea id='markdown-textarea' onChange={updateMarkdown} value={markdown} style={{minHeight:"calc(100vh - 100px)"}}
+              <textarea id='markdown-textarea' onChange={updateMarkdown} value={markdown} style={{height:'calc(100vh - 250px)'}}
                 ref={textareaRef}
                 className="w-full h-full resize-none bg-default-100 rounded-tr-none rounded-tl-none rounded-xl p-5 outline-none" />
             </div>
-        </Tab>
-        <Tab key="Preview" title="Preview">
-            <MarkdownRenderer markdown={markdown} />
-        </Tab>
-      </Tabs>
+      :
+      <MarkdownRenderer markdown={markdown} />
+
+      }
     </div>  
   );
 }
