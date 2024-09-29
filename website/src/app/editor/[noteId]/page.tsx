@@ -61,7 +61,7 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
   },[]);
 
   useEffect(()=>{
-    if (noteId === 'new' || noteId === '') return ; // New Notes
+    if (noteId === 'new' || noteId === '') {setIsLoading(false); return ;} // New Notes
     // Requesting the current Notes
     customFetch(`/api/notes?noteId=${encodeURIComponent(noteId)}`, 'GET')
       .then(data => {
