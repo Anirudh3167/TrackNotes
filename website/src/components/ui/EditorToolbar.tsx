@@ -32,7 +32,8 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ onFormatting }) => {
   };
 
   return (
-    <div className="flex justify-center max-sm:justify-start space-x-4 p-2 py-3 min-h-10 bg-default-100 overflow-x-auto">
+    <div className="flex justify-center max-sm:justify-start space-x-4 p-2 py-3 min-h-10 
+      bg-neutral-900 overflow-x-auto">
       <Button onClick={handleBold} className="px-3 py-1">
         <div className='font-bold'>B</div>
       </Button>

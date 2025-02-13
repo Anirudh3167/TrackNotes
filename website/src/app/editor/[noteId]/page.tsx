@@ -78,8 +78,8 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
       })
   },[noteId]);
 
-  const handleResponseAndNavigate = (data: any,msg : string) => {
-    if(data.status) {   toast(`Markdown ${msg}`, {icon: '👍'});   router.push('/notes'); } 
+  const handleResponseAndNavigate = (data: any,msg : string, navigate:boolean = true) => {
+    if(data.status) {   toast(`Markdown ${msg}`, {icon: '👍'});   navigate ? router.push('/notes') : setEditing(false); } 
     else alert(data.reason);
   }
 
@@ -100,7 +100,7 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
       return ;
     }
     await customFetch('/api/notes', 'POST', { content: markdown, noteId: noteId==='new' ? '' : noteId })
-    .then(data => handleResponseAndNavigate(data,"saved"))
+    .then(data => handleResponseAndNavigate(data,"saved",false))
   }
 
   const deleteMarkdown = async () => {
@@ -156,7 +156,7 @@ export default function MDEditor({ params }: { params: { noteId: string } }) {
               <EditorToolbar onFormatting={handleFormatting} />
               <textarea id='markdown-textarea' onChange={updateMarkdown} value={markdown} style={{height:'calc(100vh - 250px)'}}
                 ref={textareaRef}
-                className="w-full h-full resize-none bg-default-100 rounded-tr-none rounded-tl-none rounded-xl p-5 outline-none" />
+                className="w-full h-full resize-none bg-neutral-900 rounded-tr-none rounded-tl-none rounded-xl p-5 outline-none" />
             </div>
       :
       <MarkdownRenderer markdown={markdown} />

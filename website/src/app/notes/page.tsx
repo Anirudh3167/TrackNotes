@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 
 // UI Components
-import { Link } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 import { LocalNotesType } from "@/lib/types";
 
 // custom made functions
@@ -29,8 +29,12 @@ function Notes() {
     }, []);
     return(
         <div className="flex flex-col gap-3 p-3">
-            <Link href="/editor/new" className="flex items-center justify-center text-white text-2xl bg-default-200 rounded-lg w-48 h-auto p-3">New Note</Link>
-            <h1 className="text-3xl flex items-center justify-center w-full">Your Notes</h1>
+            <Button as='a' href="/editor/new" className="bg-neutral-800 text-white rounded-lg shadow-md 
+            p-3 text-xl flex items-center justify-center w-fit h-auto">
+                New Note
+            </Button>
+
+            <h1 className="text-4xl flex font-bold items-center justify-center w-full">Your Notes</h1>
             {pageStatus === "loading" ? 
                 <p className="flex items-center justify-center w-full min-h-96 text-center text-3xl">Loading Your Notes...</p>
             :

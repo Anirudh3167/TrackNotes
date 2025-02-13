@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     if (!Note) return Response.json({ status: false, reason: 'Note not found' });
 
     // Authorize  
-    if (Note.access === 'private') {
+    if (Note.access.toLowerCase() === 'private') {
         let username = await getUserName();
         if (!username || username !== Note.author) 
             return Response.json({ status: false, reason: 'Unauthorized' });

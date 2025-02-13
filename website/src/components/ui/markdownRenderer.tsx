@@ -6,7 +6,7 @@ import remarkGfm from "remark-gfm"
 function MarkdownRenderer({ markdown } : { markdown: string }) {
 
     return (
-        <ReactMarkdown className={'markdown w-full h-full overflow-auto overflow-x-clip bg-default-100 rounded-xl p-5'}
+        <ReactMarkdown className={'markdown w-full h-full overflow-auto overflow-x-clip bg-neutral-950 rounded-xl p-5'}
            components={{
             a: ({node, ...props}) => <a target="_blank" href={props.href} className="text-blue-500" rel="noreferrer" {...props} />,
             table: ({children}) => (
